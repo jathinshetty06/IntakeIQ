@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IntakeIQ – Universal AI Client Intake Agent</title>
+<style>
+:root{--bg:#f4f6fc;--bg2:#fff;--tx:#12172b;--mut:#5d6580;--bd:#dde2f1;--pri:#7857ff;--sec:#1f9fe0;--ok:#12865c;--wa:#a8700a;--er:#d13650;--gr:#707791;--glow:rgba(120,87,255,.12);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#080d1b;--bg2:#10182b;--tx:#f5f7ff;--mut:#9aa3c2;--bd:#25304f;--sec:#35b8ff;--ok:#22c98a;--wa:#f5b942;--er:#f05d72;--gr:#8a93b2;--glow:rgba(120,87,255,.22)}}
+:root[data-theme="dark"]{--bg:#080d1b;--bg2:#10182b;--tx:#f5f7ff;--mut:#9aa3c2;--bd:#25304f;--sec:#35b8ff;--ok:#22c98a;--wa:#f5b942;--er:#f05d72;--gr:#8a93b2;--glow:rgba(120,87,255,.22)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.55 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+h1,h2,h3{margin:0 0 .4em;line-height:1.15;letter-spacing:-.02em}
+a{color:inherit;text-decoration:none;cursor:pointer}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--bd)}
+.nav .wrap{display:flex;align-items:center;gap:18px;height:58px}
+.nav .links{display:flex;gap:16px;margin-left:auto;align-items:center;font-size:14px;color:var(--mut);overflow-x:auto}
+.logo{font-weight:800;font-size:18px;display:flex;gap:8px;align-items:center}
+.logo i{width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,var(--pri),var(--sec));display:inline-block}
+.btn{border:0;border-radius:10px;padding:10px 16px;font:600 14px inherit;font-family:inherit;color:#fff;background:linear-gradient(135deg,var(--pri),#5b6cff);cursor:pointer;transition:transform .15s,box-shadow .15s;white-space:nowrap}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px var(--glow)}
+.btn.s{background:transparent;color:var(--tx);border:1px solid var(--bd)}
+.btn.ok{background:var(--ok)}.btn.er{background:var(--er)}.btn.sm{padding:6px 11px;font-size:13px}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.hero{padding:72px 0 48px;background:radial-gradient(700px 320px at 75% 0,var(--glow),transparent)}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:center}
+.hero h1{font-size:clamp(34px,6vw,56px)}
+.hero p{color:var(--mut);font-size:17px;max-width:520px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.stats{display:flex;gap:28px;margin-top:30px}.stats b{font-size:28px;display:block}.stats span{font-size:13px;color:var(--mut)}
+.card{background:var(--bg2);border:1px solid var(--bd);border-radius:14px;padding:18px}
+.mock{animation:fl 5s ease-in-out infinite}
+@keyframes fl{50%{transform:translateY(-8px)}}
+@media (prefers-reduced-motion:reduce){.mock{animation:none}html{scroll-behavior:auto}}
+section.sec{padding:52px 0}
+.g{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.mut{color:var(--mut)}.sm{font-size:13px}
+.badge{display:inline-block;border-radius:99px;padding:2px 10px;font-size:12px;font-weight:600;border:1px solid currentColor}
+.ok{color:var(--ok)}.wa{color:var(--wa)}.er{color:var(--er)}.gr{color:var(--gr)}
+.demo{background:var(--glow);border:1px dashed var(--pri);border-radius:10px;padding:8px 12px;font-size:13px;margin-bottom:16px}
+.app{display:grid;grid-template-columns:200px 1fr;min-height:calc(100vh - 58px)}
+.side{border-right:1px solid var(--bd);padding:14px 10px;display:flex;flex-direction:column;gap:3px}
+.side a{padding:9px 12px;border-radius:9px;color:var(--mut);font-size:14px}
+.side a.on{background:var(--glow);color:var(--tx);font-weight:600}
+.main{padding:22px;min-width:0}
+@media (max-width:760px){.app{display:block}.side{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--bd)}.side a{white-space:nowrap}.hero .wrap{grid-template-columns:1fr}}
+input,select,textarea{width:100%;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:9px;padding:9px 11px;font:inherit}
+label{font-size:13px;color:var(--mut);display:block;margin:10px 0 4px}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--bd);white-space:nowrap}th{color:var(--mut);font-weight:600;cursor:pointer}
+.bar{height:8px;background:var(--bd);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--pri),var(--sec));transition:width .4s}
+.chat{display:grid;grid-template-columns:1fr 260px;gap:14px}@media (max-width:900px){.chat{grid-template-columns:1fr}}
+#msgs{height:400px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:4px}
+.b{max-width:80%;padding:9px 13px;border-radius:14px;animation:in .25s}.b small{display:block;font-size:11px;opacity:.65;margin-top:2px}
+.b.ai{background:var(--glow);align-self:flex-start;border-bottom-left-radius:4px}.b.me{background:var(--pri);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+@keyframes in{from{opacity:0;transform:translateY(6px)}}
+.dots span{display:inline-block;width:6px;height:6px;margin:0 2px;border-radius:50%;background:var(--mut);animation:d 1s infinite}.dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
+@keyframes d{50%{opacity:.2}}
+.chip{border:1px solid var(--bd);background:var(--bg2);color:var(--tx);border-radius:99px;padding:5px 12px;font-size:13px;cursor:pointer}
+.drop{border:2px dashed var(--bd);border-radius:14px;padding:30px;text-align:center;cursor:pointer}.drop.h{border-color:var(--pri);background:var(--glow)}
+pre{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:12px;overflow:auto;font-size:12px;max-height:320px}
+.tag{font-size:11px;border-radius:6px;padding:1px 7px;background:var(--glow);margin-left:6px}
+details{border-bottom:1px solid var(--bd);padding:12px 0}summary{cursor:pointer;font-weight:600}
+:focus-visible{outline:2px solid var(--sec);outline-offset:2px}
+@media print{.nav,.side,.noprint,.demo{display:none!important}.app{display:block}}
+</style></head><body><div id="root"></div>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const now=()=>new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+const API_URL = "http://127.0.0.1:8000";
+
+async function loadRealIntakes() {
+    try {
+        const response = await fetch(`${API_URL}/api/intakes`);
+
+        if (!response.ok) {
+            throw new Error("Could not load intakes");
+        }
+
+        const data = await response.json();
+
+        return (data.intakes || []).map(item => {
+            const fields = item.fields || {};
+            const validation = item.validation || {};
+
+            return [
+                fields.full_name || "Unnamed Client",
+                item.industry || "General",
+                item.intake_id,
+                item.created_at
+                    ? item.created_at.slice(0, 10)
+                    : "—",
+                validation.completion_percentage || 0,
+                item.status || "In progress"
+            ];
+        });
+    } catch (error) {
+        console.error("Dashboard loading error:", error);
+        return [];
+    }
+}
+
+
+
+
+async function callIntakeAgent(message) {
+    const industryMap = {
+        "Legal": "legal",
+        "Insurance": "insurance",
+        "Business Consulting": "business consulting",
+        "General": "general"
+    };
+
+    const response = await fetch(`${API_URL}/api/agent/chat`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            industry: industryMap[S.ind],
+            intake_id: S.id,
+            messages: [
+                ...S.apiMessages,
+                { role: "user", content: message }
+            ],
+            current_fields: S.apiFields
+        })
+    });
+
+    // Keep your existing code below this line.
+
+
+    if (!response.ok) {
+        let detail = `HTTP ${response.status}`;
+
+        try {
+            const errorData = await response.json();
+            detail = errorData.detail || detail;
+        } catch {}
+
+        throw new Error(detail);
+    }
+
+    const data = await response.json();
+
+    S.apiMessages.push(
+        { role: "user", content: message },
+        { role: "assistant", content: data.assistant_message }
+    );
+
+    S.apiFields = data.extracted_fields || {};
+    S.apiValidation = data.validation || {};
+
+    const f = S.apiFields;
+
+    if (f.full_name) S.client.name = f.full_name;
+    if (f.contact_email) S.client.email = f.contact_email;
+
+    const fieldMap = {
+        matter_type: "type",
+        matter_description: "summary",
+        policy_number: "policy",
+        incident_date: "incident_date",
+        incident_description: "incident",
+        organization: "biz",
+        service_needed: "need",
+        business_goal: "goal"
+    };
+
+    Object.entries(fieldMap).forEach(([apiKey, uiKey]) => {
+        if (f[apiKey]) S.ans[uiKey] = f[apiKey];
+    });
+
+    return data;
+}
+const APP=["overview","intake","documents","validation","report","review","status"],NAV={client:["intake","documents","status"],provider:["overview","validation","report","review"]};
+const NAMES={overview:"Overview",intake:"New intake",documents:"Documents",validation:"Validation center",report:"Intake report",review:"Professional review",status:"My status"};
+const Q={Legal:[["type","What type of legal assistance are you looking for?",["Property dispute","Contract issue","Family matter"]],["summary","Could you briefly explain what happened?"],["parties","Who are the other parties involved?",0,1],["evidence","Do you have ownership documents or other evidence? You can attach them on the Documents page."],["outcome","What outcome are you hoping for?"]],
+Insurance:[["type","Which type of insurance is this about?",["Health","Motor","Property"]],["policy","What is your policy number?"],["incident","What happened, and when?"],["loss","What is the estimated loss or claim amount?"],["notes","Anything else we should know?",0,1]],
+"Business Consulting":[["biz","What is your business name and sector?"],["goal","What is the main goal you want help with?"],["size","Roughly how large is the team or turnover?",["Under 10 people","10 to 100","Over 100"]],["timeline","What timeline are you working with?"]],
+General:[["need","What do you need help with?"],["urgency","How urgent is it?",["Today","This week","No rush"]],["contact","How would you like us to contact you?",["Email","Phone"]]]};
+const S={role:"client",requests:[],ind:null,client:{name:"",email:"",phone:"",address:""},ans:{},msgs:[],apiMessages: [],
+apiFields: {},
+apiValidation: {},qi:0,clar:{},docs:[],res:{},rev:{st:"Not submitted",notes:[],log:[]},typing:false,id:"INT-"+Math.floor(1000+Math.random()*9000)};
+const ROWS=[["Aarav Mehta","Legal","INT-2041","2026-11-02",100,"Approved"],["Neha Iyer","Insurance","INT-2042","2026-11-03",82,"Pending review"],["Rohan Das","Business Consulting","INT-2043","2026-11-04",64,"In progress"],["Meera Nair","General","INT-2044","2026-11-05",100,"Pending review"],["Kabir Shah","Legal","INT-2045","2026-11-06",47,"In progress"],["Isha Rao","Insurance","INT-2046","2026-11-07",91,"Needs info"],["Dev Patel","Business Consulting","INT-2047","2026-11-09",100,"Approved"],["Anya Roy","Legal","INT-2048","2026-11-10",73,"Needs info"]];
+let tbl={q:"",f:"All",p:0,s:3,d:-1};
+const nz=s=>String(s||"").toLowerCase().replace(/[^a-z0-9]/g,"");
+const nameLike=(a,b)=>{const x=a.toLowerCase().split(/\s+/),y=b.toLowerCase().replace(/\./g,"").split(/\s+/);return x.at(-1)===y.at(-1)&&x[0][0]===y[0][0]};
+function addDoc(f){const ok=/\.(pdf|png|jpe?g|docx)$/i.test(f.name);if(!ok||f.size>10485760){toast(esc(f.name)+": only PDF, PNG, JPG or DOCX up to 10 MB are accepted.");return}
+ const d={name:f.name,size:f.size,pct:0,ext:null};S.docs.push(d);const t=setInterval(()=>{d.pct+=20;if(d.pct>=100){clearInterval(t);const c=S.client,h=[...f.name].reduce((a,x)=>a+x.charCodeAt(0),0);
+ d.ext={name:c.name?c.name[0]+". "+c.name.split(" ").at(-1):null,address:"22 Residency Road, Bengaluru 560025",phone:null,ref:"REF-"+(h%90000+10000),date:"2024-03-18",conf:70+h%24}}docList()},350);docList()}
+function toast(m){const e=$("#toast");if(e){e.innerHTML=m;setTimeout(()=>e.innerHTML="",4000)}}
+function V(){const d=S.docs.find(x=>x.ext),e=d&&d.ext,c=S.client,r=[];
+ const cmp=(f,cv,dv,fz)=>{let st,ex,sg;if(S.res[f]!==undefined){st="ok";ex='Client confirmed "'+S.res[f]+'". Not independently verified.';sg="None"}
+ else if(!cv){st="gr";ex="Not provided by client.";sg="Ask client"}else if(!e){st="gr";ex="Awaiting a document to compare against.";sg="Upload a document"}
+ else if(!dv){st="gr";ex="Not Found in the document.";sg="Ask for a supporting document"}else if(nz(cv)===nz(dv)){st="ok";ex="Values match.";sg="None"}
+ else if(fz&&fz(cv,dv)){st="wa";ex="Similar but not identical.";sg="Confirm both refer to the same person"}else{st="er";ex="Values differ.";sg="Ask client which is current"}
+ r.push({f,cv,dv:dv||"Not Found",st,ex,src:d?d.name+", page 1":"No document",sg})};
+ cmp("Full name",c.name,e&&e.name,nameLike);cmp("Address",c.address,e&&e.address);cmp("Phone",c.phone,e&&e.phone);
+ (Q[S.ind]||[]).forEach(q=>{if(S.ans[q[0]]===undefined&&!q[3])r.push({f:q[0],cv:"",dv:"—",st:"gr",ex:"Mandatory question unanswered.",src:"Conversation",sg:"Ask client"})});return r}
+const LBL={ok:"Verified",wa:"Needs Review",er:"Conflict Detected",gr:"Missing Information"};
+const bd=s=>`<span class="badge ${s}">${LBL[s]}</span>`;
+function pct(){const q=Q[S.ind]||[];return q.length?Math.round(100*q.filter(x=>S.ans[x[0]]!==undefined).length/q.length):0}
+function demo(){S.ind="Legal";S.client={name:"Priya Sharma",email:"priya.sharma@example.com",phone:"+91 98450 12345",address:"14 MG Road, Bengaluru 560001"};
+ S.ans={type:"Property dispute",summary:"My neighbour has occupied part of my land.",parties:"Neighbour, Mr. Kulkarni",evidence:"Sale deed copy"};S.qi=4;S.res={};S.docs=[];
+ S.msgs=[["ai",Q.Legal[0][1]],["me","I need help with a property dispute."],["ai",Q.Legal[1][1]],["me",S.ans.summary],["ai",Q.Legal[2][1]],["me",S.ans.parties],["ai",Q.Legal[3][1]],["me",S.ans.evidence],["ai",Q.Legal[4][1]]].map(m=>({r:m[0],t:m[1],time:now()}));
+ S.docs=[{name:"sale_deed_sample.pdf",size:182000,pct:100,ext:{name:"P. Sharma",address:"22 Residency Road, Bengaluru 560025",phone:null,ref:"REF-48213",date:"2024-03-18",conf:86}}];S.requests=[];S.rev={st:"Not submitted",notes:[],log:[]};if(S.role==="provider"){S.rev.st="Submitted";S.rev.log.push(now()+": Client submitted intake (demo)");go("review")}else go("intake")
+ S.apiMessages = [];
+ S.apiFields = {};
+ S.apiValidation = {};}
+
+const go=h=>{location.hash=h};
+
+async function ask() {
+    if (S.typing) return;
+
+    S.typing = true;
+    paint();
+
+    try {
+        const data = await callIntakeAgent(
+            `Hello! I would like to start a ${S.ind} intake.`
+        );
+
+        S.msgs.push({
+            r: "ai",
+            t: data.assistant_message,
+            time: now()
+        });
+    } catch (error) {
+        S.msgs.push({
+            r: "ai",
+            t: "I couldn't connect to the AI service. Please check that the backend is running and try again. Error: " + error.message,
+            time: now()
+        });
+    }
+
+    S.typing = false;
+    paint();
+}
+
+async function send(t) {
+    t = t.trim();
+
+    if (!t || S.typing) return;
+
+    S.msgs.push({
+        r: "me",
+        t,
+        time: now()
+    });
+
+    S.typing = true;
+    paint();
+
+    try {
+        const data = await callIntakeAgent(t);
+
+        S.msgs.push({
+            r: "ai",
+            t: data.assistant_message,
+            time: now()
+        });
+    } catch (error) {
+        S.msgs.push({
+            r: "ai",
+            t: "Sorry, I couldn't reach the AI backend. Please try again. Error: " + error.message,
+            time: now()
+        });
+    }
+
+    S.typing = false;
+    paint();
+}
+
+function paint() {
+    const m = $("#msgs");
+    if (!m) return;
+
+    m.innerHTML = S.msgs.map(x =>
+        `<div class="b ${x.r}">${esc(x.t)}<small>${x.time}</small></div>`
+    ).join("") +
+    (S.typing
+        ? '<div class="b ai dots"><span></span><span></span><span></span></div>'
+        : "");
+
+    m.scrollTop = m.scrollHeight;
+
+    const percentage = S.apiValidation.completion_percentage ?? pct();
+
+    const p = $("#prog");
+    if (p) {
+        p.innerHTML = `
+            <b>${percentage}%</b> complete
+            <div class="bar">
+                <i style="width:${percentage}%"></i>
+            </div>
+        `;
+    }
+
+    const sg = $("#sugg");
+    if (sg) sg.innerHTML = "";
+}
+
+
+function docList(){const e=$("#dl");if(!e)return;e.innerHTML=S.docs.length?S.docs.map((d,i)=>`<div class="card" style="margin-top:10px"><div class="row"><b>${esc(d.name)}</b><span class="mut sm">${(d.size/1024).toFixed(0)} KB</span><span style="margin-left:auto" class="badge ${d.pct<100?"wa":"ok"}">${d.pct<100?"Processing "+d.pct+"%":"Processed (simulated)"}</span><button class="btn s sm" data-rm="${i}">Remove</button></div>
+ ${d.ext?`<div class="g sm" style="margin-top:10px"><div>Document type<br><b>Property document</b></div><div>Name<br><b>${esc(d.ext.name||"Not Visible")}</b></div><div>Address<br><b>${esc(d.ext.address)}</b></div><div>Phone<br><b>Not Found</b></div><div>Reference<br><b>${d.ext.ref}</b></div><div>Date<br><b>${d.ext.date}</b></div><div>Confidence<br><b>${d.ext.conf}%</b></div></div><div class="mut sm" style="margin-top:6px">Source: ${esc(d.name)}, page 1. <b>Simulated extraction:</b> your file was not read or uploaded.</div>`:`<div class="bar" style="margin-top:10px"><i style="width:${d.pct}%"></i></div>`}</div>`).join(""):'<p class="mut">No documents yet. Add one to see simulated extraction.</p>'}
+function R(){const v=V(),c=S.client;return{intake_id:S.id,industry:S.ind,generated:new Date().toISOString(),mode:"demo (simulated AI and extraction)",client:{source:"client-provided",...c},requirements:{source:"client-provided",...S.ans},
+ conversation_summary:{source:"AI-generated (simulated template)",text:`${c.name||"The client"} approached for ${S.ind} intake. Key points: ${Object.values(S.ans).filter(x=>x!=="(skipped)").join("; ")||"none yet"}.`},
+ documents:S.docs.filter(d=>d.ext).map(d=>({file:d.name,source:"document-extracted (simulated)",...d.ext})),missing:v.filter(x=>x.st==="gr").map(x=>x.f),inconsistencies:v.filter(x=>x.st==="er"||x.st==="wa").map(x=>({field:x.f,client:x.cv,document:x.dv,note:x.ex})),
+ validation:v.map(x=>({field:x.f,status:LBL[x.st],reference:x.src})),pending_actions:v.filter(x=>x.st!=="ok").map(x=>x.sg),review:{status:S.rev.st,source:"human",audit:S.rev.log}}}
+const VIEWS={
+overview(){return`<h2>Provider dashboard: case queue</h2><div class="g" id="kp"></div><div class="g" style="margin-top:14px"><div class="card"><b>Intake activity (last 7 days)</b><div id="ch" style="display:flex;align-items:end;gap:8px;height:110px;margin-top:12px"></div><div class="mut sm">Sample data</div></div><div class="card"><b>Clients by industry</b><div id="ind" style="margin-top:10px"></div></div></div>
+<div class="card" style="margin-top:14px"><div class="row noprint"><input id="q" placeholder="Search clients or IDs" style="max-width:240px"><select id="f" style="max-width:180px"><option>All</option><option>Approved</option><option>Submitted</option><option>In Review</option><option>Additional Information Required</option><option>Completed</option><option>Pending review</option><option>In progress</option><option>Needs info</option></select></div><div class="scroll"><table><thead><tr>${["Client","Industry","Intake ID","Submitted","Complete","Status"].map((h,i)=>`<th data-s="${i}">${h}</th>`).join("")}<th>Action</th></tr></thead><tbody id="tb"></tbody></table></div><div class="row" id="pg" style="margin-top:8px"></div></div>`},
+
+intake(){if(!S.ind)return`<h2>New intake</h2><div class="card" style="max-width:560px"><label>Industry</label><div class="row" id="inds">${Object.keys(Q).map(k=>`<button class="chip" data-i="${k}">${k}</button>`).join("")}</div>
+<label>Full name</label><input id="n"><label>Email</label><input id="e" type="email"><label>Phone</label><input id="p"><label>Address</label><input id="a"><p class="er sm" id="err"></p><div class="row"><button class="btn" id="st">Start conversation</button><button class="btn s" id="dm">Load demo client</button></div></div>`;
+ return`<h2>AI intake assistant</h2><div class="chat"><div class="card"><div id="msgs"></div><div class="row" id="sugg" style="margin:8px 0"></div><div class="row noprint"><input id="ti" placeholder="Type your answer" style="flex:1" autocomplete="off"><button class="btn" id="sd">Send</button></div></div>
+<div class="card"><div id="prog"></div><p class="sm"><b>${esc(S.ind)}</b> intake for ${esc(S.client.name)}</p><p class="mut sm">Collected so far:</p>${Object.entries(S.ans).map(([k,v])=>`<div class="sm"><b>${esc(k)}:</b> ${esc(v)}</div>`).join("")||'<span class="mut sm">Nothing yet</span>'}<button class="btn sm" style="margin-top:12px" id="sub">Submit for professional review</button><button class="btn s sm" style="margin:12px 0 0 6px" onclick="go('documents')">Add documents</button></div></div>`},
+documents(){return`<h2>Documents</h2><div class="drop" id="dz">Drop PDF, PNG, JPG or DOCX files here, or click to browse<input id="fi" type="file" multiple hidden accept=".pdf,.png,.jpg,.jpeg,.docx"></div><div class="mut sm" id="toast" style="margin-top:6px"></div><div id="dl"></div>`},
+validation(){const v=V(),o=S.role==="provider"?[]:v.filter(x=>x.st==="er"||x.st==="wa"||(x.st==="gr"&&S.docs.some(d=>d.ext)&&x.f==="Phone"));
+ return`<h2>Validation center</h2><p class="mut sm">These are AI consistency checks, not proof that a document is authentic or legally valid.</p>${S.ind?"":'<div class="card">Start an intake first, or load the demo client.<br><br><button class="btn" id="dm">Load demo client</button></div>'}
+<div class="scroll card"><table><thead><tr><th>Field</th><th>Client value</th><th>Document value</th><th>Status</th><th>Explanation</th><th>Source</th><th>Suggested resolution</th></tr></thead><tbody>${v.map(x=>`<tr><td>${esc(x.f)}</td><td>${esc(x.cv)||"—"}</td><td>${esc(x.dv)}</td><td>${bd(x.st)}</td><td style="white-space:normal">${esc(x.ex)}</td><td>${esc(x.src)}</td><td style="white-space:normal">${esc(x.sg)}</td></tr>`).join("")}</tbody></table></div>
+${o.length?'<h3 style="margin-top:18px">Follow-up questions</h3>':""}${o.map(x=>x.st==="gr"?`<div class="card" style="margin-top:10px">The document does not show your ${esc(x.f.toLowerCase())}. Can you upload a document that does? <button class="btn s sm" onclick="go('documents')">Upload</button></div>`:`<div class="card" style="margin-top:10px">We noticed that the ${esc(x.f.toLowerCase())} you provided (<b>${esc(x.cv)}</b>) differs from the uploaded document (<b>${esc(x.dv)}</b>). Could you confirm which is currently correct?<div class="row" style="margin-top:8px"><button class="btn sm" data-r="${esc(x.f)}" data-v="${esc(x.cv)}">Mine is correct</button><button class="btn s sm" data-r="${esc(x.f)}" data-v="${esc(x.dv)}">Document is correct</button></div></div>`).join("")}`},
+report(){const r=R();return`<div class="row noprint"><h2 style="margin:0">Intake report</h2><span style="margin-left:auto"></span><button class="btn s sm" id="cj">Copy JSON</button><button class="btn s sm" onclick="window.print()">Print</button></div><p class="mut sm" id="rm"></p>
+${[["Intake ID and industry","Generated",`${r.intake_id} · ${esc(S.ind||"Not selected")}`],["Client information","Client-provided",esc(Object.values(S.client).join(", "))||"—"],["Client requirements","Client-provided",Object.entries(S.ans).map(([k,v])=>`${esc(k)}: ${esc(v)}`).join("<br>")||"—"],["Conversation summary","AI-generated (simulated)",esc(r.conversation_summary.text)],["Extracted document information","Document-extracted (simulated)",r.documents.map(d=>`${esc(d.file)}: ${esc(d.name||"Not Visible")}, ${esc(d.address)}, ${d.ref}`).join("<br>")||"None yet"],["Missing information","Validation",r.missing.map(esc).join(", ")||"None"],["Detected inconsistencies","Validation",r.inconsistencies.map(i=>`${esc(i.field)}: ${esc(i.client)} vs ${esc(i.document)}`).join("<br>")||"None"],["Pending actions","Validation",[...new Set(r.pending_actions)].map(esc).join("<br>")||"None"],["Professional review status","Human",esc(S.rev.st)]].map(s=>`<div class="card" style="margin-top:10px"><b>${s[0]}</b><span class="tag">${s[1]}</span><div style="margin-top:6px">${s[2]}</div></div>`).join("")}<pre id="js" hidden>${esc(JSON.stringify(r,null,2))}</pre>`},
+status(){const st=S.rev.st==="Not submitted"?"Draft":S.rev.st,steps=["Submitted","In Review","Additional Information Required","Completed"],cf=V().filter(x=>x.st==="er"||x.st==="wa"),un=V().filter(x=>x.src==="Conversation").length;
+return`<h2>My intake status</h2>${S.ind?"":'<div class="card">No intake yet. <a class="btn sm" href="#intake">Start an intake</a> <button class="btn s sm" id="dm">Load demo client</button></div>'}<div class="card"><div class="row">${steps.map(s=>`<span class="badge ${s===st?(s.startsWith("Add")?"wa":"ok"):"gr"}">${s}</span>`).join("")}</div><p class="sm mut">Current status: <b>${st}</b>${st==="Draft"?". Submit from the intake page when you are ready.":""}</p></div>
+${un?`<div class="card" style="margin-top:10px">You have ${un} unanswered question(s). <a class="btn sm" href="#intake">Continue intake</a></div>`:""}
+${cf.map(x=>`<div class="card" style="margin-top:10px"><span class="tag">AI assistant</span> We noticed that the ${esc(x.f.toLowerCase())} you provided (<b>${esc(x.cv)}</b>) differs from the uploaded document (<b>${esc(x.dv)}</b>). Could you confirm which is currently correct?<div class="row" style="margin-top:8px"><button class="btn sm" data-r="${esc(x.f)}" data-v="${esc(x.cv)}">Mine is correct</button><button class="btn s sm" data-r="${esc(x.f)}" data-v="${esc(x.dv)}">Document is correct</button></div></div>`).join("")}
+${S.requests.map((r,i)=>`<div class="card" style="margin-top:10px"><span class="tag">Provider request</span> ${esc(r.q)}${r.a?`<div class="sm ok">Your reply: ${esc(r.a)}</div>`:`<input id="a${i}" placeholder="Your answer" style="margin-top:8px"><button class="btn sm" style="margin-top:8px" data-q="${i}">Send reply</button>`}</div>`).join("")}`},
+review(){if(S.rev.st==="Submitted"){S.rev.st="In Review";S.rev.log.push(now()+": Provider started review")}const v=V(),open=v.filter(x=>x.st!=="ok").length;return`<h2>Professional review</h2><p class="mut sm">AI assists; the final decision is always the reviewer’s. Status: <b>${esc(S.rev.st)}</b></p><div class="g"><div class="card"><b>Client</b><div class="sm">${esc(Object.values(S.client).join(", "))||"No intake yet"}</div><div class="sm">${open} open validation item(s)</div></div><div class="card"><b>Conversation</b><div class="sm" style="max-height:140px;overflow:auto">${S.msgs.map(m=>`${m.r==="ai"?"AI":"Client"}: ${esc(m.t)}`).join("<br>")||"—"}</div></div></div>
+<div class="card" style="margin-top:12px"><b>AI case summary</b><span class="tag">AI-generated (simulated)</span><p class="sm">${esc(R().conversation_summary.text)}</p><div class="sm">Required fields: ${(Q[S.ind]||[]).filter(q=>S.ans[q[0]]!==undefined).length}/${(Q[S.ind]||[]).length} · Documents extracted: ${S.docs.filter(d=>d.ext).length} · Inconsistencies: ${v.filter(x=>x.st==="er"||x.st==="wa").length}</div>${S.docs.map(d=>`<div class="sm mut">${esc(d.name)}${d.ext?": "+esc(d.ext.address):""}</div>`).join("")}${S.requests.map(r=>`<div class="sm">Request: ${esc(r.q)} → ${esc(r.a||"awaiting client")}</div>`).join("")}</div><div class="card" style="margin-top:12px"><label>Internal note</label><textarea id="nt" rows="2"></textarea><div class="row" style="margin-top:10px"><button class="btn sm" data-a="Added note">Add note</button><button class="btn ok sm" data-a="Approved">Approve</button><button class="btn s sm" data-a="Additional information requested">Request information</button><button class="btn er sm" data-a="Returned for corrections">Return</button></div></div>
+<div class="card" style="margin-top:12px"><b>Audit trail</b>${S.rev.log.map(l=>`<div class="sm">${l}</div>`).join("")||'<div class="mut sm">No review actions yet.</div>'}</div>`}};
+function landing(h){$("#root").innerHTML=`<div class="nav"><div class="wrap"><a class="logo" href="#home"><i></i>IntakeIQ</a><div class="links"><a href="#home">Home</a><a href="#features">Features</a><a href="#how">How it works</a><a href="#industries">Industries</a><a href="#faq">FAQ</a><a class="btn s" href="#overview">Provider dashboard</a><a class="btn" href="#intake">Client portal</a></div></div></div>
+<div class="hero" id="home"><div class="wrap"><div><h1>Client intake, reimagined by AI.</h1><p>Collect information, understand documents, detect missing details and generate professional intake reports in one workflow.</p><div class="row"><a class="btn" href="#intake">Open client portal</a><a class="btn s" href="#overview">Open provider dashboard</a></div><div class="stats"><div><b data-n="4">0</b><span>industries</span></div><div><b data-n="12">0</b><span>report sections</span></div><div><b data-n="4">0</b><span>validation states</span></div></div></div>
+<div class="card mock"><b>Intake INT-2043</b><span class="tag">Illustrative preview</span><div class="sm mut" style="margin:8px 0">Address mismatch between your answer and the uploaded deed.</div><div class="bar"><i style="width:72%"></i></div><div class="row" style="margin-top:10px"><span class="badge ok">Name</span><span class="badge er">Address</span><span class="badge gr">Phone</span></div></div></div></div>
+<section class="sec" id="features"><div class="wrap"><h2>What the agent does</h2><div class="g">${[["Adaptive conversation","One question at a time, shaped by earlier answers, with clarification when replies are vague."],["Document intelligence","Upload PDFs, images or DOCX and see fields with source references."],["Validation engine","Compares answers with documents and flags conflicts, gaps and format issues."],["Follow-up engine","Turns each issue into a question the client can answer in one click."],["Intake reports","Structured summary with every item labeled by source."],["Human review","Approve, return or request information, with an audit trail."]].map(x=>`<div class="card"><h3>${x[0]}</h3><p class="mut sm">${x[1]}</p></div>`).join("")}</div></div></section>
+<section class="sec" id="how"><div class="wrap"><h2>How it works</h2><div class="g">${["Choose an industry and enter client details","Answer questions in a guided chat","Add documents for extraction","Resolve flagged issues, then send for review"].map((x,i)=>`<div class="card"><b>${i+1}.</b> ${x}</div>`).join("")}</div></div></section>
+<section class="sec" id="industries"><div class="wrap"><h2>Industries</h2><div class="g">${Object.keys(Q).map(k=>`<div class="card"><b>${k}</b><div class="mut sm">${Q[k].length} tailored questions</div></div>`).join("")}</div></div></section>
+<section class="sec" id="faq"><div class="wrap"><h2>FAQ</h2><details><summary>Is this using a real AI model?</summary><p class="mut">Yes. IntakeIQ uses Google's Gemini AI model to understand client messages,
+    extract relevant intake details, identify missing information, and ask
+    follow-up questions. Document upload and extraction are currently simulated
+    and are not yet connected to real document processing</p></details><details><summary>Does it verify that documents are genuine?</summary><p class="mut">No. It flags inconsistencies for a human to review.</p></details><details><summary>Where is my data stored?</summary><p class="mut">In memory only. Refreshing the page clears it.</p></details>
+<div class="card" style="margin-top:24px;text-align:center"><h2>From first conversation to professional-ready intake</h2><a class="btn" href="#intake">Start free intake</a></div></div></section><footer class="wrap mut sm" style="padding:24px 20px">IntakeIQ demo. Gemini-powered intake. Simulated document processing.</footer>`;
+ document.querySelectorAll("[data-n]").forEach(e=>{let n=0;const t=+e.dataset.n,i=setInterval(()=>{e.textContent=++n;if(n>=t)clearInterval(i)},90)});
+ if(h&&$("#"+h))$("#"+h).scrollIntoView()}
+
+async function table() {
+    const rows = await loadRealIntakes();
+
+    let r = rows.filter(x =>
+        (tbl.f === "All" || x[5] === tbl.f) &&
+        (x[0] + x[2]).toLowerCase().includes(tbl.q.toLowerCase())
+    ).sort((a, b) =>
+        (a[tbl.s] > b[tbl.s] ? 1 : -1) * tbl.d * -1
+    );
+
+    const pages = Math.max(1, Math.ceil(r.length / 5));
+    tbl.p = Math.min(tbl.p, pages - 1);
+
+    $("#tb").innerHTML = r.slice(tbl.p * 5, tbl.p * 5 + 5)
+        .map(x => `
+            <tr>
+                <td>${esc(x[0])}</td>
+                <td>${esc(x[1])}</td>
+                <td>${esc(x[2])}</td>
+                <td>${esc(x[3])}</td>
+                <td>${x[4]}%</td>
+                <td>${esc(x[5])}</td>
+                <td>
+                    <button class="btn s sm"
+                        onclick="go('review')">Review</button>
+                </td>
+            </tr>
+        `).join("") ||
+        '<tr><td colspan="7" class="mut">No matching clients.</td></tr>';
+
+    $("#pg").innerHTML = `
+        <button class="btn s sm" id="pv"
+            ${tbl.p < 1 ? "disabled" : ""}>Previous</button>
+        <span class="sm mut">Page ${tbl.p + 1} of ${pages}</span>
+        <button class="btn s sm" id="nx"
+            ${tbl.p >= pages - 1 ? "disabled" : ""}>Next</button>
+    `;
+
+    $("#pv").onclick = () => {
+        tbl.p--;
+        table();
+    };
+
+    $("#nx").onclick = () => {
+        tbl.p++;
+        table();
+    };
+}
+
+function bind(v){const on=(s,ev,fn)=>{const e=$(s);if(e)e.addEventListener(ev,fn)};
+ 
+if (v === "overview") {
+    fetch(`${API_URL}/api/dashboard/stats`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to load dashboard statistics");
+            }
+            return response.json();
+        })
+        .then(stats => {
+            $("#kp").innerHTML = [
+                ["Total clients", stats.total_clients],
+                ["Active sessions", stats.active_intakes],
+                ["Completed", stats.completed_intakes],
+                ["Pending reviews", stats.pending_reviews]
+            ].map(k => `
+                <div class="card">
+                    <div class="mut sm">${k[0]}</div>
+                    <b style="font-size:26px">${k[1]}</b>
+                </div>
+            `).join("");
+        })
+        .catch(error => {
+            console.error("Dashboard statistics error:", error);
+            $("#kp").innerHTML =
+                '<div class="card">Unable to load statistics.</div>';
+        });
+
+    $("#ch").innerHTML = [3,5,2,6,4,7,5]
+        .map(h => `<i style="flex:1;height:${h*14}px;background:linear-gradient(var(--sec),var(--pri));border-radius:5px 5px 0 0"></i>`)
+        .join("");
+
+    $("#ind").innerHTML = Object.keys(Q).map(k => {
+        const n = ROWS.filter(x => x[1] === k).length;
+        return `<div class="sm">${k} (${n})</div><div class="bar" style="margin-bottom:6px"><i style="width:${n*25}%"></i></div>`;
+    }).join("");
+
+    on("#q", "input", e => {
+        tbl.q = e.target.value;
+        tbl.p = 0;
+        table();
+    });
+
+    on("#f", "change", e => {
+        tbl.f = e.target.value;
+        tbl.p = 0;
+        table();
+    });
+
+    document.querySelectorAll("th[data-s]").forEach(t => {
+        t.onclick = () => {
+            tbl.d = tbl.s == +t.dataset.s ? -tbl.d : 1;
+            tbl.s = +t.dataset.s;
+            table();
+        };
+    });
+
+    table();
+}
+
+ 
+if (v === "intake") {
+    on("#dm", "click", demo);
+
+    if (!S.ind) {
+        let pick = "Legal";
+
+        document.querySelectorAll("[data-i]").forEach(b => {
+            b.onclick = () => {
+                pick = b.dataset.i;
+
+                document.querySelectorAll("[data-i]").forEach(x => {
+                    x.style.borderColor =
+                        x === b ? "var(--pri)" : "";
+                });
+            };
+        });
+
+        const legalButton = document.querySelector('[data-i="Legal"]');
+        if (legalButton) legalButton.click();
+
+        on("#st", "click", () => {
+            const n = $("#n").value.trim();
+            const e = $("#e").value.trim();
+
+            if (!n || !/^\S+@\S+\.\S+$/.test(e)) {
+                $("#err").textContent =
+                    "Enter your name and a valid email address.";
+                return;
+            }
+
+            S.ind = pick;
+            S.client = {
+                name: n,
+                email: e,
+                phone: $("#p").value.trim(),
+                address: $("#a").value.trim()
+            };
+
+            S.ans = {};
+            S.msgs = [];
+            S.apiMessages = [];
+            S.apiFields = {
+            full_name: S.client.name,
+            contact_email: S.client.email
+            };
+            S.apiValidation = {};
+            S.qi = 0;
+            S.docs = [];
+            S.res = {};
+            S.clar = {};
+
+            go("intake");
+            render("intake");
+            ask();
+        });
+    } else {
+        paint();
+
+        on("#sub", "click", () => {
+            S.rev.st = "Submitted";
+            S.rev.log.push(
+                now() + ": Client submitted intake for professional review"
+            );
+            go("status");
+        });
+
+        const ti = $("#ti");
+
+        on("#sd", "click", () => {
+            send(ti.value);
+            ti.value = "";
+        });
+
+        on("#ti", "keydown", e => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                send(ti.value);
+                ti.value = "";
+            }
+        });
+
+        if (!S.msgs.length) ask();
+    }
+}
+
+ if(v==="documents"){const dz=$("#dz"),fi=$("#fi");dz.onclick=()=>fi.click();fi.onchange=()=>[...fi.files].forEach(addDoc);dz.ondragover=e=>{e.preventDefault();dz.classList.add("h")};dz.ondragleave=()=>dz.classList.remove("h");dz.ondrop=e=>{e.preventDefault();dz.classList.remove("h");[...e.dataTransfer.files].forEach(addDoc)};
+  $("#dl").onclick=e=>{if(e.target.dataset.rm){S.docs.splice(+e.target.dataset.rm,1);docList()}};docList()}
+ if(v==="validation"||v==="status"){on("#dm","click",demo);document.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{S.res[b.dataset.r]=b.dataset.v;if(b.dataset.r==="Address")S.client.address=b.dataset.v;render(v)})}
+ if(v==="report"){on("#cj","click",()=>{$("#js").hidden=false;(navigator.clipboard?navigator.clipboard.writeText($("#js").textContent):Promise.reject()).then(()=>$("#rm").textContent="JSON copied. It is also shown below.").catch(()=>$("#rm").textContent="Copy blocked here. Select the JSON below to copy it.")});
+  on("#sr","click",()=>{if(!S.ind){$("#rm").textContent="Start an intake first.";return}S.rev.st="Pending review";S.rev.log.push(now()+": Sent for professional review");go("review")})}
+ if(v==="status")document.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>{const t=$("#a"+b.dataset.q).value.trim();if(!t)return;S.requests[b.dataset.q].a=t;S.rev.log.push(now()+": Client replied to a provider request");if(!S.requests.some(r=>!r.a)){S.rev.st="In Review";S.rev.log.push(now()+": Returned to review")}render("status")});
+ if(v==="review")document.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{const a=b.dataset.a,nt=$("#nt").value.trim();if(a==="Added note"&&!nt)return;if(a!=="Added note"){S.rev.st=a==="Approved"?"Completed":"Additional Information Required";if(S.rev.st!=="Completed")S.requests.push({q:nt||"Please provide the missing details flagged in your intake.",a:""})}
+  S.rev.log.push(`${now()}: ${a}${nt?" – "+esc(nt):""} (${V().filter(x=>x.st!=="ok").length} open items)`);render("review")})}
+function render(v){$("#root").innerHTML=`<div class="nav"><div class="wrap"><a class="logo" href="#home"><i></i>IntakeIQ</a><div class="links"><span class="badge ok">AI connected</span><a class="btn s sm" href="#intake">Client portal</a><a class="btn s sm" href="#overview">Provider dashboard</a></div></div></div><div class="app"><div class="side">${NAV[S.role].map(a=>`<a href="#${a}" class="${a===v?"on":""}">${NAMES[a]}</a>`).join("")}</div><div class="main"><div class="demo"><b>AI-powered intake:</b> Gemini handles the intake conversation. Document extraction is still simulated in this version.</div>${VIEWS[v]()}</div></div>`;bind(v);window.scrollTo(0,0)}
+function route(){const h=location.hash.slice(1);if(NAV.provider.includes(h))S.role="provider";else if(NAV.client.includes(h))S.role="client";APP.includes(h)?render(h):landing(h)}
+addEventListener("hashchange",route);route();
+</script></body></html>
